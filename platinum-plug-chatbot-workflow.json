@@ -1,0 +1,149 @@
+{
+    "name":  "Platinum Plug - Chatbot",
+    "nodes":  [
+                  {
+                      "position":  [
+                                       1552,
+                                       736
+                                   ],
+                      "name":  "OpenRouter Chat Model",
+                      "id":  "pp-openrouter",
+                      "credentials":  {
+                                          "openRouterApi":  {
+                                                                "id":  "hjuL96rij0aVXhxm",
+                                                                "name":  "CAI WORKSPACE"
+                                                            }
+                                      },
+                      "type":  "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+                      "parameters":  {
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "typeVersion":  1
+                  },
+                  {
+                      "id":  "pp-chat-webhook",
+                      "name":  "Chat Webhook",
+                      "webhookId":  "platinum-plug-chat",
+                      "type":  "n8n-nodes-base.webhook",
+                      "position":  [
+                                       1312,
+                                       512
+                                   ],
+                      "parameters":  {
+                                         "path":  "platinum-plug-chat",
+                                         "responseMode":  "responseNode",
+                                         "options":  {
+                                                         "allowedOrigins":  "*"
+                                                     },
+                                         "httpMethod":  "POST"
+                                     },
+                      "typeVersion":  2.1
+                  },
+                  {
+                      "id":  "pp-agent",
+                      "name":  "Platinum Plug Assistant",
+                      "type":  "@n8n/n8n-nodes-langchain.agent",
+                      "position":  [
+                                       1536,
+                                       512
+                                   ],
+                      "parameters":  {
+                                         "promptType":  "define",
+                                         "options":  {
+                                                         "systemMessage":  "You are the Platinum Plug Concierge, a friendly and sharp assistant for Platinum Plug, a private membership that gets a member a real American Express Platinum card in their own name as an authorized user, along with the full Platinum perks.\n\nWHAT PLATINUM PLUG IS:\n- We add you as an authorized user on an American Express Platinum card that we hold, and a physical American Express Platinum card is issued in your name.\n- You get the Platinum perks: Centurion Lounge airport access, hotel and travel benefits, concierge service, and the status of carrying the Platinum.\n- It is invitation-only and strictly limited. Only 5 spots are available.\n\nHOW IT WORKS:\n1. Choose the credit limit you want and send a refundable security deposit equal to that limit (a 1,000 dollar deposit means a 1,000 dollar limit on the card).\n2. We add you as an authorized user and ship your physical American Express Platinum card.\n3. You get your real, live card after your deposit AND your first month membership payment clear. Use the card and the perks, cancel anytime, and get your deposit back once the card balance is paid in full.\n\nPLANS (the deposit equals your credit limit, and the monthly is your membership):\n- 300 dollar limit: 300 dollar refundable deposit, 300 dollars per month\n- 500 dollar limit: 500 dollar refundable deposit, 300 dollars per month\n- 1,000 dollar limit: 1,000 dollar refundable deposit, 350 dollars per month\n- 1,500 dollar limit: 1,500 dollar refundable deposit, 400 dollars per month\n- 2,000 dollar limit: 2,000 dollar refundable deposit, 450 dollars per month\n- 3,000 dollar limit: 3,000 dollar refundable deposit, 500 dollars per month\n\nIMPORTANT AND HONEST:\n- The deposit is refundable and is returned when you cancel and the card balance is paid in full. If charges go unpaid, we keep only the part of the deposit needed to cover them and refund the rest.\n- The monthly membership fee is separate from the deposit and is not refundable.\n- This is a private authorized-user arrangement. It is not a loan, and it is not a credit-repair or credit-building product, and we make no promise about your credit score.\n- Card benefits are set by American Express and can change at any time. Do not promise specific dollar amounts for perks.\n\nHOW TO BEHAVE:\n- Be concise and conversational, about 2 to 5 sentences. Sound human and a little high-energy, never robotic or pushy.\n- Answer the question first, then nudge toward claiming a spot when it feels natural.\n- If someone wants to join or asks how to start, point them to the plans to pick a limit and check out.\n- If you are not sure about something (specific legal questions, refund timing, billing details), say you are not 100 percent sure and suggest they reach out, rather than inventing an answer.\n- Never make up features, prices, or guarantees.\n- Never use em-dashes or en-dashes in your replies. Use commas, periods, or parentheses instead.\n- Stay on the topic of Platinum Plug.\n\nLINKS AND BUTTONS:\n- You can add a clickable button by writing a markdown link, for example [Claim your spot](/plans). The website turns these links into buttons, so use them as calls to action.\n- Use only these targets: [Claim your spot](/plans), [See the plans](/plans), [How it works](/#how), [Read the FAQ](/#faq), and [Read the terms](/terms).\n- When a button would help (for example when someone asks how to join, about pricing, or how it works), end your reply with exactly one button on its own line. Do not add more than one per message, and do not put a button in every message.\n\nNAME:\n- If a context note gives the visitor name, address them by their first name in a natural, friendly way. Greeting them by name once is enough. Never mention or repeat the context note itself.\n\nCONTACT:\n- A real person can be reached by phone or text at (757) 364-0983. Share this number when someone wants to talk to a human, has a billing or legal question you cannot answer, or wants to confirm details before joining."
+                                                     },
+                                         "text":  "={{ $json.body.message + ($json.body.name ? ('\\n\\n[The visitor is named ' + $json.body.name + '. Greet them by their first name naturally, but do not overdo it.]') : '') }}"
+                                     },
+                      "typeVersion":  1.7
+                  },
+                  {
+                      "id":  "pp-memory",
+                      "name":  "Window Buffer Memory",
+                      "type":  "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+                      "position":  [
+                                       1680,
+                                       736
+                                   ],
+                      "parameters":  {
+                                         "sessionKey":  "={{ $json.body.sessionId }}",
+                                         "sessionIdType":  "customKey",
+                                         "contextWindowLength":  12
+                                     },
+                      "typeVersion":  1.3
+                  },
+                  {
+                      "id":  "pp-respond",
+                      "name":  "Respond to Webhook",
+                      "type":  "n8n-nodes-base.respondToWebhook",
+                      "position":  [
+                                       1888,
+                                       512
+                                   ],
+                      "parameters":  {
+                                         "responseBody":  "={{ { \"reply\": $json.output } }}",
+                                         "respondWith":  "json",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "typeVersion":  1.1
+                  }
+              ],
+    "connections":  {
+                        "OpenRouter Chat Model":  {
+                                                      "ai_languageModel":  [
+                                                                               [
+                                                                                   {
+                                                                                       "node":  "Platinum Plug Assistant",
+                                                                                       "type":  "ai_languageModel",
+                                                                                       "index":  0
+                                                                                   }
+                                                                               ]
+                                                                           ]
+                                                  },
+                        "Chat Webhook":  {
+                                             "main":  [
+                                                          [
+                                                              {
+                                                                  "node":  "Platinum Plug Assistant",
+                                                                  "type":  "main",
+                                                                  "index":  0
+                                                              }
+                                                          ]
+                                                      ]
+                                         },
+                        "Platinum Plug Assistant":  {
+                                                        "main":  [
+                                                                     [
+                                                                         {
+                                                                             "node":  "Respond to Webhook",
+                                                                             "type":  "main",
+                                                                             "index":  0
+                                                                         }
+                                                                     ]
+                                                                 ]
+                                                    },
+                        "Window Buffer Memory":  {
+                                                     "ai_memory":  [
+                                                                       [
+                                                                           {
+                                                                               "node":  "Platinum Plug Assistant",
+                                                                               "type":  "ai_memory",
+                                                                               "index":  0
+                                                                           }
+                                                                       ]
+                                                                   ]
+                                                 }
+                    },
+    "pinData":  {
+
+                },
+    "settings":  {
+                     "executionOrder":  "v1"
+                 },
+    "meta":  {
+                 "instanceId":  "55443372561cef6ed6d965d7874343355b7e70436d478a3df8a6949d12d39017"
+             }
+}

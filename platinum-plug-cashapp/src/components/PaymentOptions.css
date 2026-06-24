@@ -1,0 +1,189 @@
+/* ============================================================
+   Payment options (Cash App / Venmo / Zelle) — premium dark
+   ============================================================ */
+.pay {
+  margin-top: 28px;
+}
+
+.pay__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.pay__wallet {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid var(--border-strong);
+  color: var(--champagne);
+  background: var(--glass);
+}
+
+.pay__wallet svg {
+  width: 23px;
+  height: 23px;
+}
+
+.pay__title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.pay__sub {
+  margin-top: 5px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.pay__sub strong {
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.pay__methods {
+  display: flex;
+  flex-direction: column;
+}
+
+.pay__or {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 4px;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.pay__or::before,
+.pay__or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.paybtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 18px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--on);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 58%),
+    var(--brand);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), filter 0.2s ease;
+}
+
+.paybtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.5), 0 0 30px var(--glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+  filter: brightness(1.04);
+}
+
+.paybtn:active {
+  transform: translateY(0);
+}
+
+.paybtn__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paybtn__icon img {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.paybtn__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.18;
+}
+
+.paybtn__label {
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.paybtn__handle {
+  font-size: 0.78rem;
+  font-weight: 500;
+  opacity: 0.82;
+  word-break: break-all;
+}
+
+.paybtn__action {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  opacity: 0.8;
+}
+
+.paybtn__action svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.paybtn--copied {
+  filter: brightness(1.07);
+}
+
+.pay__toast {
+  min-height: 22px;
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--champagne);
+}
+
+.pay__note {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.pay__note a {
+  color: var(--platinum);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.pay__note a:hover {
+  color: #fff;
+}

@@ -1,0 +1,18 @@
+# ─────────────────────────────────────────────────────────────
+# SECRETS — never commit these.
+# This workflow file currently contains a LIVE Stripe secret key.
+# ─────────────────────────────────────────────────────────────
+platinum-access-stripe-ghl-workflow.json
+
+# Generic secret / env files
+.env
+.env.*
+*.local
+*secret*
+*.key
+*.pem
+
+# Node / build output (in case git is initialized at this root)
+node_modules/
+dist/
+.DS_Store

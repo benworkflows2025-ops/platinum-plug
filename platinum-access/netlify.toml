@@ -1,0 +1,13 @@
+# Netlify build + SPA routing config.
+# Static deploy: Netlify runs `npm run build` and serves the dist/ folder.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Single-page-app fallback: every route (e.g. /success, /terms) is served
+# index.html so react-router can handle it client-side.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
