@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────────────────────────
+# Root Netlify config for the platinum-plug repo.
+#
+# This repo holds several apps in subfolders (v2, platinum-access,
+# platinum-plug-cashapp). Netlify needs to know which one to build,
+# otherwise it builds the empty repo root and serves a 404.
+#
+# `base` tells Netlify to cd into platinum-plug-cashapp before building.
+# `command` and `publish` are then resolved relative to that base, so
+# `dist` means platinum-plug-cashapp/dist.
+# ─────────────────────────────────────────────────────────────
+
+[build]
+  base = "platinum-plug-cashapp"
+  command = "npm run build"
+  publish = "dist"
+
+# Single-page-app fallback: every route (e.g. /success, /terms, /cart)
+# is served index.html so react-router can handle it client-side.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
