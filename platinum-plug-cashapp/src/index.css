@@ -496,15 +496,156 @@ button {
   pointer-events: none;
 }
 
-.hero__card-img {
+/* ============================================================
+   Hero MIRROR CARD — "glare-sweep". The float + drop-shadow +
+   width live on the STAGE wrapper so the image and every masked
+   sheen overlay move as one. Each overlay is clipped to the real
+   card silhouette via the asset passed in through --card-mask.
+   ============================================================ */
+
+/* Stage on the hero so the pointer lean reads as gentle 3D. */
+.hero__visual {
+  perspective: 1200px;
+  /* resting defaults so the card looks alive before the first pointer move */
+  --mx: 50%;
+  --my: 34%;
+  --rx: 0deg;
+  --ry: 0deg;
+  --active: 0;
+}
+
+/* Wrapper: owns the float, drop-shadow, sizing + the quiet pointer tilt. */
+.hero__card-stage {
   position: relative;
   z-index: 3;
   width: min(330px, 72%);
-  height: auto;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.4s var(--ease);
   filter: drop-shadow(0 42px 52px rgba(0, 0, 0, 0.62));
   animation: floaty 7.5s ease-in-out infinite;
+  will-change: transform;
 }
 
+/* The real card art; the wrapper now owns size + motion. */
+.hero__card-img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  /* sharpen the metal a touch so the sheen reads as polish, not haze */
+  filter: contrast(1.03) saturate(1.02);
+}
+
+/* Shared mask: clip every sheen layer to the exact card shape + corners. */
+.hero__card-holo,
+.hero__card-glare,
+.hero__card-hotspot,
+.hero__card-edge {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: var(--card-mask);
+  mask-image: var(--card-mask);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* (1) HOLO TINT — a very restrained cool -> silver -> champagne band on
+   soft-light, under the hard glint, for a hint of reflected-environment color. */
+.hero__card-holo {
+  z-index: 2;
+  overflow: hidden;
+  mix-blend-mode: soft-light;
+  opacity: 0.55;
+}
+.hero__card-holo::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(
+    115deg,
+    rgba(132, 156, 206, 0) 18%,
+    rgba(132, 156, 206, 0.22) 33%,
+    rgba(232, 234, 240, 0.34) 47%,
+    rgba(204, 184, 146, 0.3) 60%,
+    rgba(150, 175, 200, 0) 80%
+  );
+  transform: translateX(-22%);
+  animation: holoDrift 11s ease-in-out infinite;
+}
+
+/* (2) HARD GLARE — the hero cue: a tight near-white specular streak that rakes
+   across then rests off-surface, plus a delayed blurred champagne secondary band. */
+.hero__card-glare {
+  z-index: 3;
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+.hero__card-glare::before,
+.hero__card-glare::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.18) 46%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(214, 216, 224, 0.45) 54%,
+    transparent 62%
+  );
+  transform: translateX(-160%);
+}
+.hero__card-glare::before {
+  animation: glareSweep 6.5s cubic-bezier(0.5, 0, 0.2, 1) infinite;
+}
+.hero__card-glare::after {
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(204, 184, 146, 0) 47%,
+    rgba(230, 231, 234, 0.4) 50%,
+    transparent 58%
+  );
+  opacity: 0.55;
+  filter: blur(3px);
+  animation: glareSweep 6.5s cubic-bezier(0.5, 0, 0.2, 1) infinite;
+  animation-delay: 0.42s;
+}
+
+/* (3) MIRROR HOTSPOT — a soft specular blob anchored to the cursor; brightens
+   on hover (--active) so the mirror visibly reacts. */
+.hero__card-hotspot {
+  z-index: 4;
+  mix-blend-mode: screen;
+  opacity: calc(0.32 + var(--active) * 0.5);
+  background: radial-gradient(
+    150px 116px at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.92),
+    rgba(255, 255, 255, 0.26) 34%,
+    rgba(204, 184, 146, 0.14) 54%,
+    transparent 72%
+  );
+  transition: opacity 0.35s var(--ease);
+}
+
+/* (4) EDGE RIM — a thin bright rim along the top bezel on soft-light. */
+.hero__card-edge {
+  z-index: 5;
+  mix-blend-mode: soft-light;
+  opacity: 0.7;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.85), transparent 13%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.18), transparent 11%);
+}
+
+/* Reflection on the floor (kept from the original, now synced to the stage). */
 .hero__card-reflection {
   position: absolute;
   z-index: 2;
@@ -517,6 +658,38 @@ button {
   filter: blur(9px);
   opacity: 0.55;
   pointer-events: none;
+}
+
+/* Compositor-friendly motion: only translateX is animated. */
+@keyframes glareSweep {
+  0% { transform: translateX(-160%); }
+  18% { transform: translateX(160%); }
+  100% { transform: translateX(160%); }
+}
+@keyframes holoDrift {
+  0%, 100% { transform: translateX(-22%); }
+  50% { transform: translateX(22%); }
+}
+
+/* Reduced motion: settle every overlay into a flattering static state. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__card-stage {
+    animation: none;
+    transform: none;
+  }
+  .hero__card-holo::before {
+    animation: none;
+    transform: translateX(0);
+  }
+  .hero__card-glare::before,
+  .hero__card-glare::after {
+    animation: none;
+    transform: translateX(0);
+    opacity: 0.4;
+  }
+  .hero__card-hotspot {
+    opacity: 0.34;
+  }
 }
 
 @keyframes floaty {
@@ -555,6 +728,16 @@ button {
   }
   .hero__scene {
     inset: 8% 0;
+  }
+  /* Skip live tilt on touch and soften the glint so it stays subtle. */
+  .hero__card-stage {
+    transform: none;
+  }
+  .hero__card-glare {
+    opacity: 0.78;
+  }
+  .hero__card-hotspot {
+    opacity: 0.3;
   }
 }
 

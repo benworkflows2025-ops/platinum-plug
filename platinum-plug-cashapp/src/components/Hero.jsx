@@ -36,8 +36,34 @@ export default function Hero() {
         </div>
 
         {/* Card layered over an ambient scene. Decorative; the headline carries the meaning.
-            Drop a real lounge/hotel photo onto .hero__scene to go photographic. */}
-        <div className="hero__visual" aria-hidden="true">
+            Drop a real lounge/hotel photo onto .hero__scene to go photographic.
+            The card now carries a "mirror" treatment: a specular glint sweeps across
+            it, a cursor-tracked hotspot reacts to the pointer, and every sheen layer is
+            masked to the exact card silhouette via the asset url in --card-mask. */}
+        <div
+          className="hero__visual"
+          aria-hidden="true"
+          onPointerMove={(e) => {
+            const el = e.currentTarget
+            const r = el.getBoundingClientRect()
+            const px = (e.clientX - r.left) / r.width // 0..1
+            const py = (e.clientY - r.top) / r.height // 0..1
+            el.style.setProperty('--mx', `${(px * 100).toFixed(2)}%`)
+            el.style.setProperty('--my', `${(py * 100).toFixed(2)}%`)
+            // gentle lean toward the cursor (capped ~9deg)
+            el.style.setProperty('--ry', `${((px - 0.5) * 18).toFixed(2)}deg`)
+            el.style.setProperty('--rx', `${((0.5 - py) * 14).toFixed(2)}deg`)
+            el.style.setProperty('--active', '1')
+          }}
+          onPointerLeave={(e) => {
+            const el = e.currentTarget
+            el.style.setProperty('--mx', '50%')
+            el.style.setProperty('--my', '34%')
+            el.style.setProperty('--ry', '0deg')
+            el.style.setProperty('--rx', '0deg')
+            el.style.setProperty('--active', '0')
+          }}
+        >
           <div className="hero__beam" />
           <div className="hero__scene">
             <img className="hero__photo" src={IMAGES.heroScene} alt="" loading="eager" />
@@ -45,14 +71,28 @@ export default function Hero() {
           <div className="hero__ellipse hero__ellipse--1" />
           <div className="hero__ellipse hero__ellipse--2" />
           <div className="hero__card-reflection" />
-          <img
-            src={platinumCard}
-            alt=""
-            className="hero__card-img"
-            width="315"
-            height="200"
-            loading="eager"
-          />
+
+          {/* Card + masked mirror overlays move together. The card asset is passed as
+              the mask url so every sheen layer is clipped to the exact silhouette +
+              rounded corners (never a rectangle over the transparent alpha). */}
+          <div className="hero__card-stage" style={{ '--card-mask': `url(${platinumCard})` }}>
+            <img
+              src={platinumCard}
+              alt=""
+              className="hero__card-img"
+              width="315"
+              height="200"
+              loading="eager"
+            />
+            {/* faint, restrained champagne/cool holo tint (soft-light) */}
+            <div className="hero__card-holo" />
+            {/* hard dual-band specular glint sweep (screen) — the hero mirror cue */}
+            <div className="hero__card-glare" />
+            {/* cursor-tracked mirror hotspot (screen) — brightens on hover */}
+            <div className="hero__card-hotspot" />
+            {/* soft-light top edge rim so the metal bezel catches the light */}
+            <div className="hero__card-edge" />
+          </div>
         </div>
       </div>
     </section>
