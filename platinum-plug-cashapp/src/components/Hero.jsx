@@ -84,9 +84,9 @@ export default function Hero() {
               height="200"
               loading="eager"
             />
-            {/* faint, restrained champagne/cool holo tint (soft-light) */}
-            <div className="hero__card-holo" />
-            {/* hard dual-band specular glint sweep (screen) — the hero mirror cue */}
+            {/* high-contrast reflected-environment map (overlay) — the mirror finish */}
+            <div className="hero__card-chrome" />
+            {/* hard specular glint sweep (screen) — crisp polished-chrome highlight */}
             <div className="hero__card-glare" />
             {/* cursor-tracked mirror hotspot (screen) — brightens on hover */}
             <div className="hero__card-hotspot" />

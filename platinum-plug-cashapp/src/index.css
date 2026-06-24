@@ -534,12 +534,13 @@ button {
   display: block;
   width: 100%;
   height: auto;
-  /* sharpen the metal a touch so the sheen reads as polish, not haze */
-  filter: contrast(1.03) saturate(1.02);
+  /* Punch up the metal into a glossy, reflective base so the chrome
+     reflection layer reads as a true polished mirror, not matte frost. */
+  filter: contrast(1.42) brightness(1.03) saturate(0.86);
 }
 
 /* Shared mask: clip every sheen layer to the exact card shape + corners. */
-.hero__card-holo,
+.hero__card-chrome,
 .hero__card-glare,
 .hero__card-hotspot,
 .hero__card-edge {
@@ -556,28 +557,41 @@ button {
   mask-position: center;
 }
 
-/* (1) HOLO TINT — a very restrained cool -> silver -> champagne band on
-   soft-light, under the hard glint, for a hint of reflected-environment color. */
-.hero__card-holo {
+/* (1) CHROME REFLECTION — the core "mirror". A high-contrast reflected-
+   environment map (bright ceiling/light -> dark room -> bright again) on
+   OVERLAY blend, so the metal's lights blow out to near-white and the darks
+   deepen to charcoal — the light-and-dark banding that makes chrome read as
+   a mirror, not just a shine. It slowly drifts so the reflection looks live. */
+.hero__card-chrome {
   z-index: 2;
   overflow: hidden;
-  mix-blend-mode: soft-light;
-  opacity: 0.55;
+  mix-blend-mode: hard-light;
+  opacity: 0.82;
 }
-.hero__card-holo::before {
+.hero__card-chrome::before {
   content: '';
   position: absolute;
-  inset: -40%;
+  inset: -60%;
+  /* Sharp, high-contrast reflected environment: bright sky meeting a deep
+     dark "horizon" with a crisp catch-line, the signature read of polished
+     chrome. Tight stops = defined reflections, not a soft haze. */
   background: linear-gradient(
-    115deg,
-    rgba(132, 156, 206, 0) 18%,
-    rgba(132, 156, 206, 0.22) 33%,
-    rgba(232, 234, 240, 0.34) 47%,
-    rgba(204, 184, 146, 0.3) 60%,
-    rgba(150, 175, 200, 0) 80%
+    168deg,
+    rgba(252, 253, 255, 0.95) 0%,
+    rgba(214, 220, 232, 0.62) 9%,
+    rgba(26, 30, 40, 0.88) 17%,    /* dark reflected band */
+    rgba(238, 242, 251, 0.92) 27%, /* bright band */
+    rgba(8, 10, 16, 0.94) 30.5%,   /* crisp dark horizon */
+    rgba(255, 255, 255, 0.96) 33%, /* bright catch-line right above horizon */
+    rgba(120, 128, 146, 0.5) 46%,  /* mid silver falloff */
+    rgba(186, 158, 108, 0.42) 60%, /* faint warm champagne glance */
+    rgba(10, 12, 18, 0.9) 74%,     /* dark reflected floor */
+    rgba(244, 247, 254, 0.82) 84%, /* bright lower reflection */
+    rgba(70, 76, 92, 0.55) 92%,
+    rgba(12, 14, 20, 0.7) 100%
   );
-  transform: translateX(-22%);
-  animation: holoDrift 11s ease-in-out infinite;
+  transform: translate(-12%, -5%);
+  animation: chromeDrift 9s ease-in-out infinite;
 }
 
 /* (2) HARD GLARE — the hero cue: a tight near-white specular streak that rakes
@@ -666,9 +680,9 @@ button {
   18% { transform: translateX(160%); }
   100% { transform: translateX(160%); }
 }
-@keyframes holoDrift {
-  0%, 100% { transform: translateX(-22%); }
-  50% { transform: translateX(22%); }
+@keyframes chromeDrift {
+  0%, 100% { transform: translate(-12%, -5%); }
+  50% { transform: translate(12%, 5%); }
 }
 
 /* Reduced motion: settle every overlay into a flattering static state. */
@@ -677,9 +691,9 @@ button {
     animation: none;
     transform: none;
   }
-  .hero__card-holo::before {
+  .hero__card-chrome::before {
     animation: none;
-    transform: translateX(0);
+    transform: translate(-2%, 0);
   }
   .hero__card-glare::before,
   .hero__card-glare::after {
