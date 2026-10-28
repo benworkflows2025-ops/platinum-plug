@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import SpotsBadge from './SpotsBadge.jsx'
+import SpotsBadge, { SOLD_OUT } from './SpotsBadge.jsx'
 import platinumCard from '../assets/platinum-card.avif'
 import { IMAGES } from '../lib/images.js'
 
@@ -24,9 +24,15 @@ export default function Hero() {
           </p>
 
           <div className="hero__actions">
-            <Link to="/plans" className="btn btn--primary">
-              Claim Your Spot
-            </Link>
+            {SOLD_OUT ? (
+              <button type="button" className="btn btn--primary" disabled>
+                Sold Out
+              </button>
+            ) : (
+              <Link to="/plans" className="btn btn--primary">
+                Claim Your Spot
+              </Link>
+            )}
             <Link to="/#how" className="btn btn--ghost">
               How it works
             </Link>

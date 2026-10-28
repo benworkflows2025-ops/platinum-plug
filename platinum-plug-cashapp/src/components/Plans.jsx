@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { PLANS, tierLabel } from '../data/plans'
 import { formatCents } from '../lib/format'
 import { useCart } from '../context/CartContext.jsx'
-import SpotsBadge from './SpotsBadge.jsx'
+import SpotsBadge, { SOLD_OUT } from './SpotsBadge.jsx'
 
 export default function Plans() {
   const { selectedPlan, selectPlan } = useCart()
@@ -66,8 +66,9 @@ export default function Plans() {
                     className={`btn btn--block ${isSelected ? 'btn--ghost' : 'btn--primary'}`}
                     onClick={() => handleAdd(plan)}
                     aria-pressed={isSelected}
+                    disabled={SOLD_OUT}
                   >
-                    {isSelected ? 'Selected' : 'Add to Cart'}
+                    {SOLD_OUT ? 'Sold Out' : isSelected ? 'Selected' : 'Add to Cart'}
                   </button>
                   <p className="plan__note">{tierLabel(plan)} · refundable</p>
                 </div>

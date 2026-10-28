@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext.jsx'
 import { tierLabel } from '../data/plans'
 import { formatCents } from '../lib/format'
 import PaymentOptions from './PaymentOptions.jsx'
+import { SOLD_OUT } from './SpotsBadge.jsx'
 
 export default function Cart() {
   const { selectedPlan, clearCart } = useCart()
@@ -22,7 +23,11 @@ export default function Cart() {
 
         <div className="cart">
           <div className="cart__panel">
-            {!selectedPlan ? (
+            {SOLD_OUT ? (
+              <div className="cart__empty">
+                <p>All spots are sold out. The next spot opens in 90 days.</p>
+              </div>
+            ) : !selectedPlan ? (
               <div className="cart__empty">
                 <p>Your cart is empty. Choose a credit limit to get started.</p>
                 <button type="button" className="btn btn--primary" onClick={goToPlans}>

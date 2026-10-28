@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { SPOTS_AVAILABLE } from './SpotsBadge.jsx'
+import { SPOTS_AVAILABLE, SOLD_OUT } from './SpotsBadge.jsx'
 
 // Exclusive-invitation CTA placed between the pitch and the FAQ.
 export default function Scarcity() {
@@ -12,14 +12,29 @@ export default function Scarcity() {
           <span className="invite__corner invite__corner--bl" aria-hidden="true" />
           <span className="invite__corner invite__corner--br" aria-hidden="true" />
           <span className="invite__label">Private Invitation</span>
-          <p className="invite__text">
-            Membership is capped at <strong>{SPOTS_AVAILABLE} spots</strong>.
-            <br />
-            When they're gone, they're gone.
-          </p>
-          <Link to="/plans" className="btn btn--primary">
-            Claim your spot
-          </Link>
+          {SOLD_OUT ? (
+            <>
+              <p className="invite__text">
+                All <strong>{SPOTS_AVAILABLE} spots</strong> are taken.
+                <br />
+                The next spot opens in 90 days.
+              </p>
+              <button type="button" className="btn btn--primary" disabled>
+                Sold out
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="invite__text">
+                Membership is capped at <strong>{SPOTS_AVAILABLE} spots</strong>.
+                <br />
+                When they're gone, they're gone.
+              </p>
+              <Link to="/plans" className="btn btn--primary">
+                Claim your spot
+              </Link>
+            </>
+          )}
         </div>
         <p className="invite__trust">
           Independent private membership service. Not affiliated with American Express. Authorized
